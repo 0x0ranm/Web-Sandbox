@@ -1,0 +1,15 @@
+{
+    "dependencies": {
+      "express": "*",
+      "puppeteer": "*"
+    },
+    "scripts": {
+      "start": "node app.js"
+    },
+    "name": "headless_chrome_server_listener",
+    "version": "1.0.0",
+    "main": "app.js",
+    "devDependencies": {},
+    "author": "Oran Moyal",
+    "description": "This project contains node.js server that exports Sandbox capabilites to scan websites."
+  }

@@ -16,9 +16,8 @@ requests.packages.urllib3.disable_warnings(category=InsecureRequestWarning)
 AUTH_HEADER = "<modify>"
 AUTH_VALUE = "<modify>"
 
-headers = {AUTH_HEADER: AUTH_VALUE}
 SANDBOX_PORT = 8888
-REMOTE_ENDPOINT_URL = "https://{}:{}/url?url={}"
+REMOTE_ENDPOINT_URL = "http://{}:{}/url?url={}"
 
 def scan_site(url, sandbox_server):
     """
@@ -28,11 +27,16 @@ def scan_site(url, sandbox_server):
     2. The content of the page
     3. The location of the screenshot taken from the page
     """
+
     server_url = REMOTE_ENDPOINT_URL.format(sandbox_server, SANDBOX_PORT, url)
+    headers = {AUTH_HEADER: AUTH_VALUE}
+    print(headers)
 
     # Request remote headless chrome
-    res = requests.get(server_url, headers=headers, verify = False)
-    response = json.loads(res.text)
+    print(server_url)
+    res = requests.get(server_url, headers=headers, verify=False)
+    response_text = res.text
+    response = json.loads(response_text)
     if "Error" in response.keys():
         if response["Error"] == "Unauthorized":
             print("[*] Make sure you configure correctly the auth-header and auth-header-value parameters.")
@@ -49,10 +53,9 @@ def scan_site(url, sandbox_server):
         html_parser_data = parse_site_result(site_content)
 
         return {
-            "URL": url,
-            "Data": site_content.encode("utf-8"),
-            "Image:" img_location
-        }
+            "URL": url, \
+            "Data": site_content.encode("utf-8"), \
+            "Image:": img_location }
 
 def save_image(url, img_content):
     """
@@ -69,9 +72,9 @@ def save_image(url, img_content):
 
 def run():
     arg_parse = argparse.ArgumentParser()
-	arg_parse.add_argument("-u", "--url", help="URL to scan")
-	arg_parse.add_argument("-s", "--server", help="Sandbox server IP")
-	args = arg_parse.parse_args()
+    arg_parse.add_argument("-u", "--url", help="URL to scan")
+    arg_parse.add_argument("-s", "--server", help="Sandbox server IP")
+    args = arg_parse.parse_args()
     print(scan_site(args.url, args.server))
 
-main()
+run()
